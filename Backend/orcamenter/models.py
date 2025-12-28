@@ -1,9 +1,17 @@
 from django.db import models
 from django.utils.text import slugify
 from django.core.exceptions import ValidationError
+from django.conf import settings
+import uuid
+
 
 
 class Material(models.Model):
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        null=True
+    )
     description = models.TextField()
     unit_value = models.DecimalField(
         max_digits=20,
@@ -19,6 +27,11 @@ class Material(models.Model):
 
 
 class Service(models.Model):
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        null=True
+    )
     description = models.TextField()
     unit_value = models.DecimalField(
         max_digits=20,
@@ -34,6 +47,11 @@ class Service(models.Model):
 
 
 class Client(models.Model):
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        null=True
+    )
     CPF = 'CPF'
     CNPJ = 'CNPJ'
 
@@ -64,6 +82,17 @@ class Client(models.Model):
 
 
 class Orcament(models.Model):
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+    )
+    visitor_id = models.UUIDField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
     title = models.CharField(max_length=100)
     slug = models.SlugField(unique=True, blank=True)
 
@@ -104,7 +133,8 @@ class Orcament(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.title)
+            base_slug = slugify(self.title)
+            self.slug = f"{base_slug}-{uuid.uuid4().hex[:8]}"
         super().save(*args, **kwargs)
 
     def __str__(self):
