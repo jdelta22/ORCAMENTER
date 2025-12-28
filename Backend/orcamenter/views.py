@@ -10,7 +10,7 @@ from .models import Orcament
 from rest_framework.permissions import AllowAny
 from django.contrib.auth.models import User
 
-MAX_ANON_ORCAMENTS = 1
+MAX_ANON_ORCAMENTS = 3
 
 # Create your views here.
 class OrcamentViewSet(ModelViewSet):
@@ -80,4 +80,17 @@ class OrcamentViewSet(ModelViewSet):
         return obj
 
 
+class RegisterUserView(ModelViewSet):
+    permission_classes = [AllowAny]
+    serializer_class = RegisterUserSerializer
+    queryset = User.objects.all()
+    http_method_names = ['get', 'post']
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(
+            {'message': 'User registered successfully.'},
+            status=status.HTTP_201_CREATED
+        )
