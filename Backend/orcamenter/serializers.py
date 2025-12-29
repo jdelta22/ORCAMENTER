@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Orcament, Material, Service, Client, OrcamentMaterial, OrcamentService
+from .models import Orcament, Material, Service, Client, OrcamentMaterial, OrcamentService, Plan
 from django.contrib.auth.models import User
 
 
@@ -197,13 +197,20 @@ class RegisterUserSerializer(serializers.ModelSerializer):
         fields = ('username', 'email', 'password')
 
     def create(self, validated_data):
-        user = User(
+        user = User.objects.create_user(
             username=validated_data['username'],
-            email=validated_data['email']
+            email=validated_data['email'],
+            password=validated_data['password']
         )
-        user.set_password(validated_data['password'])
-        user.save()
         return user
 
-
+class PlanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Plan
+        fields = (
+            'name',
+            'max_orcaments',
+            'can_emit_invoice',
+            'price',
+        )
 

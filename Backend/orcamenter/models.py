@@ -3,15 +3,33 @@ from django.utils.text import slugify
 from django.core.exceptions import ValidationError
 from django.conf import settings
 import uuid
+from django.contrib.auth.models import User
 
 
 
-class Material(models.Model):
+class BaseOwnedModel(models.Model):
     owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        User,
         on_delete=models.CASCADE,
-        null=True
+        null=True,
+        blank=True,
+        related_name='orcaments'
     )
+    visitor_id = models.UUIDField(null=True, blank=True, db_index=True)
+
+    class Meta:
+        abstract = True
+
+
+class Material(BaseOwnedModel):
+    owner = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='materials'
+    )
+    visitor_id = models.UUIDField(null=True, blank=True, db_index=True)
     description = models.TextField()
     unit_value = models.DecimalField(
         max_digits=20,
@@ -26,12 +44,15 @@ class Material(models.Model):
         return self.description[:50]
 
 
-class Service(models.Model):
+class Service(BaseOwnedModel):
     owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        User,
         on_delete=models.CASCADE,
-        null=True
+        null=True,
+        blank=True,
+        related_name='services'
     )
+    visitor_id = models.UUIDField(null=True, blank=True, db_index=True)
     description = models.TextField()
     unit_value = models.DecimalField(
         max_digits=20,
@@ -46,12 +67,15 @@ class Service(models.Model):
         return f'{self.description} ({self.unit_description})'
 
 
-class Client(models.Model):
+class Client(BaseOwnedModel):
     owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        User,
         on_delete=models.CASCADE,
-        null=True
+        null=True,
+        blank=True,
+        related_name='clients'
     )
+    visitor_id = models.UUIDField(null=True, blank=True, db_index=True)
     CPF = 'CPF'
     CNPJ = 'CNPJ'
 
@@ -83,16 +107,13 @@ class Client(models.Model):
 
 class Orcament(models.Model):
     owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        null=True,
-        blank=True,
+        User,
         on_delete=models.CASCADE,
-    )
-    visitor_id = models.UUIDField(
         null=True,
         blank=True,
-        db_index=True
+        related_name='orcamentss'
     )
+    visitor_id = models.UUIDField(null=True, blank=True, db_index=True)
     title = models.CharField(max_length=100)
     slug = models.SlugField(unique=True, blank=True)
 
@@ -197,3 +218,28 @@ class OrcamentService(models.Model):
         if not self.unit_value:
             self.unit_value = self.service.unit_value
         super().save(*args, **kwargs)
+
+
+class Plan(models.Model):
+    name = models.CharField(max_length=50)
+    max_orcaments = models.PositiveIntegerField()
+    can_emit_invoice = models.BooleanField(default=False)
+    price = models.DecimalField(max_digits=8, decimal_places=2)
+
+    def __str__(self):
+        return self.name
+
+class UserPlan(models.Model):
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name='plan'
+    )
+    plan = models.ForeignKey(
+        Plan,
+        on_delete=models.PROTECT
+    )
+    started_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.user.username} → {self.plan.name}'
