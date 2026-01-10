@@ -1,30 +1,31 @@
-from django.shortcuts import render
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.exceptions import PermissionDenied
-from rest_framework.views import APIView
-from rest_framework.response import Response
 import uuid
-from .serializers import *
-from .models import Orcament
-from .services import migrate_visitor_to_user
-from .permissions import IsOwnerOrVisitor 
-from rest_framework.permissions import AllowAny
+
 from django.contrib.auth.models import User
+from rest_framework import status
+from rest_framework.exceptions import PermissionDenied
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
+
+from .models import Orcament
+from .permissions import IsOwnerOrVisitor
+from .serializers import *
 
 MAX_ANON_ORCAMENTS = 5
+
 
 # Create your views here.
 class OrcamentViewSet(ModelViewSet):
     queryset = Orcament.objects.all()
 
     def get_serializer_class(self):
-        if self.action in ['create', 'update', 'partial_update']:
+        if self.action in ["create", "update", "partial_update"]:
             return OrcamentWriteSerializer
         return OrcamentReadSerializer
 
     def get_permissions(self):
-        if self.action == 'create':
+        if self.action == "create":
             return [AllowAny()]
         return [IsAuthenticated()]
 
@@ -34,7 +35,7 @@ class OrcamentViewSet(ModelViewSet):
         if user.is_authenticated:
             return Orcament.objects.filter(owner=user)
 
-        visitor_id = self.request.COOKIES.get('visitor_id')
+        visitor_id = self.request.COOKIES.get("visitor_id")
         if visitor_id:
             return Orcament.objects.filter(visitor_id=visitor_id)
 
@@ -48,9 +49,7 @@ class OrcamentViewSet(ModelViewSet):
             total = Orcament.objects.filter(owner=user).count()
 
             if total >= user_plan.max_orcaments:
-                raise PermissionDenied(
-                    'Limite de orçamentos do seu plano atingido'
-                )
+                raise PermissionDenied("Limite de orçamentos do seu plano atingido")
 
             serializer.save(owner=user)
             return
@@ -59,13 +58,13 @@ class OrcamentViewSet(ModelViewSet):
         response = super().create(request, *args, **kwargs)
 
         if not request.user.is_authenticated:
-            if not request.COOKIES.get('visitor_id'):
+            if not request.COOKIES.get("visitor_id"):
                 response.set_cookie(
-                    'visitor_id',
+                    "visitor_id",
                     self._visitor_id,
                     max_age=60 * 60 * 24 * 30,
                     httponly=True,
-                    samesite='Lax'
+                    samesite="Lax",
                 )
 
         return response
@@ -80,22 +79,21 @@ class RegisterUserView(ModelViewSet):
     permission_classes = [AllowAny]
     serializer_class = RegisterUserSerializer
     queryset = User.objects.all()
-    http_method_names = ['get', 'post']
+    http_method_names = ["get", "post"]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(
-            {'message': 'User registered successfully.'},
-            status=status.HTTP_201_CREATED
+            {"message": "User registered successfully."}, status=status.HTTP_201_CREATED
         )
 
     def perform_create(self, serializer):
         user = serializer.save()
 
         request = self.request
-        visitor_id = request.COOKIES.get('visitor_id')
+        visitor_id = request.COOKIES.get("visitor_id")
 
         if visitor_id:
             self._migrate_visitor_data(visitor_id, user)
@@ -106,7 +104,7 @@ class MaterialViewSet(ModelViewSet):
     permission_classes = [IsOwnerOrVisitor]
 
     def get_permissions(self):
-        if self.action == 'create':
+        if self.action == "create":
             return [AllowAny()]
         return super().get_permissions()
 
@@ -116,7 +114,7 @@ class MaterialViewSet(ModelViewSet):
         if user.is_authenticated:
             return Material.objects.filter(owner=user)
 
-        visitor_id = self.request.COOKIES.get('visitor_id')
+        visitor_id = self.request.COOKIES.get("visitor_id")
         if visitor_id:
             return Material.objects.filter(visitor_id=visitor_id)
 
@@ -129,12 +127,12 @@ class MaterialViewSet(ModelViewSet):
             serializer.save(owner=request.user)
             return
 
-        visitor_id = request.COOKIES.get('visitor_id')
+        visitor_id = request.COOKIES.get("visitor_id")
 
         if visitor_id:
             count = Material.objects.filter(visitor_id=visitor_id).count()
             if count >= MAX_ANON_OBJECTS:
-                raise PermissionDenied('Limite de materiais atingido')
+                raise PermissionDenied("Limite de materiais atingido")
         else:
             visitor_id = uuid.uuid4()
 
@@ -145,13 +143,13 @@ class MaterialViewSet(ModelViewSet):
         response = super().create(request, *args, **kwargs)
 
         if not request.user.is_authenticated:
-            if not request.COOKIES.get('visitor_id'):
+            if not request.COOKIES.get("visitor_id"):
                 response.set_cookie(
-                    'visitor_id',
+                    "visitor_id",
                     self._visitor_id,
                     max_age=60 * 60 * 24 * 30,
                     httponly=True,
-                    samesite='Lax'
+                    samesite="Lax",
                 )
         return response
 
@@ -161,7 +159,7 @@ class ServiceViewSet(ModelViewSet):
     permission_classes = [IsOwnerOrVisitor]
 
     def get_permissions(self):
-        if self.action == 'create':
+        if self.action == "create":
             return [AllowAny()]
         return super().get_permissions()
 
@@ -171,7 +169,7 @@ class ServiceViewSet(ModelViewSet):
         if user.is_authenticated:
             return Service.objects.filter(owner=user)
 
-        visitor_id = self.request.COOKIES.get('visitor_id')
+        visitor_id = self.request.COOKIES.get("visitor_id")
         if visitor_id:
             return Service.objects.filter(visitor_id=visitor_id)
 
@@ -184,7 +182,7 @@ class ServiceViewSet(ModelViewSet):
             serializer.save(owner=request.user)
             return
 
-        visitor_id = request.COOKIES.get('visitor_id') or uuid.uuid4()
+        visitor_id = request.COOKIES.get("visitor_id") or uuid.uuid4()
         serializer.save(visitor_id=visitor_id)
         self._visitor_id = str(visitor_id)
 
@@ -194,7 +192,7 @@ class ClientViewSet(ModelViewSet):
     permission_classes = [IsOwnerOrVisitor]
 
     def get_permissions(self):
-        if self.action == 'create':
+        if self.action == "create":
             return [AllowAny()]
         return super().get_permissions()
 
@@ -204,7 +202,7 @@ class ClientViewSet(ModelViewSet):
         if user.is_authenticated:
             return Client.objects.filter(owner=user)
 
-        visitor_id = self.request.COOKIES.get('visitor_id')
+        visitor_id = self.request.COOKIES.get("visitor_id")
         if visitor_id:
             return Client.objects.filter(visitor_id=visitor_id)
 
@@ -217,7 +215,7 @@ class ClientViewSet(ModelViewSet):
             serializer.save(owner=request.user)
             return
 
-        visitor_id = request.COOKIES.get('visitor_id') or uuid.uuid4()
+        visitor_id = request.COOKIES.get("visitor_id") or uuid.uuid4()
         serializer.save(visitor_id=visitor_id)
         self._visitor_id = str(visitor_id)
 
@@ -227,12 +225,10 @@ class InvoiceView(APIView):
 
     def post(self, request):
         if not request.user.plan.plan.can_emit_invoice:
-            raise PermissionDenied(
-                'Seu plano não permite emissão de nota fiscal'
-            )
+            raise PermissionDenied("Seu plano não permite emissão de nota fiscal")
 
         # lógica da nota fiscal
-        return Response({'status': 'NF emitida'})
+        return Response({"status": "NF emitida"})
 
 
 class MyPlanView(APIView):
