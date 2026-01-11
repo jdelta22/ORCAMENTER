@@ -33,13 +33,13 @@ class OrcamentViewSet(ModelViewSet):
         user = self.request.user
 
         if user.is_authenticated:
-            return Orcament.objects.filter(owner=user)
+            return Orcament.objects.filter(owner=user).order_by("created_at")
 
         visitor_id = self.request.COOKIES.get("visitor_id")
         if visitor_id:
-            return Orcament.objects.filter(visitor_id=visitor_id)
+            return Orcament.objects.filter(visitor_id=visitor_id).order_by("created_at")
 
-        return Orcament.objects.none()
+        return Orcament.objects.none().order_by("created_at")
 
     def perform_create(self, serializer):
         user = self.request.user

@@ -23,7 +23,7 @@ router.register(r"services", ServiceViewSet, basename="service")
 router.register(r"clients", ClientViewSet, basename="client")
 router.register(r"auth/register", RegisterUserView, basename="register")
 
-
+print(router.urls)
 urlpatterns = [
     path("api/", include(router.urls)),
     path("api/login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),

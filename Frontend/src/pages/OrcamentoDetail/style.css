@@ -17,7 +17,7 @@ form {
   gap: 30px;
   padding: 30px;
   border-radius: 10px;
-  background-color: rgb(104, 41, 36);
+  background-color: rgb(42, 42, 146);
   margin-bottom: 20px;
   max-width: 50%;
   width: 400px;
@@ -43,28 +43,39 @@ form {
   }
 }
 
-.Card {
-  display: flex;
+.orcamento-detail-container {
+  display: block;
   justify-content: space-between;
   align-items: center;
+  margin: 0 auto;
   background-color: rgb(42, 42, 146);
   padding: 20px;
   border-radius: 10px;
-  width: 400px;
+  max-width: 70%;
   margin-bottom: 10px;
   color: #fff;
+}
 
-  & button {
-    background: none;
-    border: none;
-    cursor: pointer;
-  }
-  & button:hover {
-    opacity: 0.8;
-  }
+.orcamento-information {
+  border: 1px solid #8b8ae1;
+  padding: 10px;
+  margin-bottom: 10px;
+}
 
-  & img {
-    width: 20px;
-    height: 20px;
-  }
+.client-information {
+  border: 1px solid #8b8ae1;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.material-information {
+  border: 1px solid #8b8ae1;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.service-information {
+  border: 1px solid #8b8ae1;
+  padding: 10px;
+  margin-bottom: 10px;
 }
