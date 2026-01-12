@@ -1,19 +1,14 @@
+import uuid
+
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.text import slugify
-from django.core.exceptions import ValidationError
-from django.conf import settings
-import uuid
-from django.contrib.auth.models import User
-
 
 
 class BaseOwnedModel(models.Model):
     owner = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        related_name='orcaments'
+        User, on_delete=models.CASCADE, null=True, blank=True, related_name="orcaments"
     )
     visitor_id = models.UUIDField(null=True, blank=True, db_index=True)
 
@@ -23,22 +18,12 @@ class BaseOwnedModel(models.Model):
 
 class Material(BaseOwnedModel):
     owner = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        related_name='materials'
+        User, on_delete=models.CASCADE, null=True, blank=True, related_name="materials"
     )
     visitor_id = models.UUIDField(null=True, blank=True, db_index=True)
     description = models.TextField()
-    unit_value = models.DecimalField(
-        max_digits=20,
-        decimal_places=2
-    )
-    unit_description = models.CharField(
-        max_length=20,
-        default=""
-    )
+    unit_value = models.DecimalField(max_digits=20, decimal_places=2)
+    unit_description = models.CharField(max_length=20, default="")
 
     def __str__(self):
         return self.description[:50]
@@ -46,72 +31,51 @@ class Material(BaseOwnedModel):
 
 class Service(BaseOwnedModel):
     owner = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        related_name='services'
+        User, on_delete=models.CASCADE, null=True, blank=True, related_name="services"
     )
     visitor_id = models.UUIDField(null=True, blank=True, db_index=True)
     description = models.TextField()
-    unit_value = models.DecimalField(
-        max_digits=20,
-        decimal_places=2
-    )
-    unit_description = models.CharField(
-        max_length=20,
-        default="m²"
-    )
+    unit_value = models.DecimalField(max_digits=20, decimal_places=2)
+    unit_description = models.CharField(max_length=20, default="serviço")
 
     def __str__(self):
-        return f'{self.description} ({self.unit_description})'
+        return f"{self.description} ({self.unit_description})"
 
 
 class Client(BaseOwnedModel):
     owner = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        related_name='clients'
+        User, on_delete=models.CASCADE, null=True, blank=True, related_name="clients"
     )
     visitor_id = models.UUIDField(null=True, blank=True, db_index=True)
-    CPF = 'CPF'
-    CNPJ = 'CNPJ'
+    CPF = "CPF"
+    CNPJ = "CNPJ"
 
     DOCUMENT_TYPE_CHOICES = [
-        (CPF, 'Pessoa Física'),
-        (CNPJ, 'Pessoa Jurídica'),
+        (CPF, "Pessoa Física"),
+        (CNPJ, "Pessoa Jurídica"),
     ]
 
     name = models.CharField(max_length=150)
     email = models.EmailField()
     phone = models.CharField(max_length=20)
 
-    document_type = models.CharField(
-        max_length=4,
-        choices=DOCUMENT_TYPE_CHOICES
-    )
+    document_type = models.CharField(max_length=4, choices=DOCUMENT_TYPE_CHOICES)
     document_number = models.CharField(max_length=14, unique=True)
 
     def clean(self):
         if self.document_type == self.CPF and len(self.document_number) != 11:
-            raise ValidationError('CPF deve conter 11 dígitos')
+            raise ValidationError("CPF deve conter 11 dígitos")
 
         if self.document_type == self.CNPJ and len(self.document_number) != 14:
-            raise ValidationError('CNPJ deve conter 14 dígitos')
+            raise ValidationError("CNPJ deve conter 14 dígitos")
 
     def __str__(self):
-        return f'{self.name} ({self.document_number})'
+        return f"{self.name} ({self.document_number})"
 
 
 class Orcament(models.Model):
     owner = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        related_name='orcamentss'
+        User, on_delete=models.CASCADE, null=True, blank=True, related_name="orcamentss"
     )
     visitor_id = models.UUIDField(null=True, blank=True, db_index=True)
     title = models.CharField(max_length=100)
@@ -120,36 +84,21 @@ class Orcament(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     description = models.TextField(blank=True, null=True)
 
-    client = models.ForeignKey(
-        Client,
-        on_delete=models.CASCADE
-    )
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
 
-    total_value = models.DecimalField(
-        max_digits=20,
-        decimal_places=2,
-        default=0
-    )
+    total_value = models.DecimalField(max_digits=20, decimal_places=2, default=0)
 
     materials = models.ManyToManyField(
-        Material,
-        through='OrcamentMaterial',
-        related_name='orcamentos'
+        Material, through="OrcamentMaterial", related_name="orcamentos"
     )
 
     services = models.ManyToManyField(
-        Service,
-        through='OrcamentService',
-        related_name='orcamentos'
+        Service, through="OrcamentService", related_name="orcamentos"
     )
 
     def calculate_total(self):
-        material_total = sum(
-            item.total_value for item in self.material_items.all()
-        )
-        service_total = sum(
-            item.total_value for item in self.service_items.all()
-        )
+        material_total = sum(item.total_value for item in self.material_items.all())
+        service_total = sum(item.total_value for item in self.service_items.all())
         return material_total + service_total
 
     def save(self, *args, **kwargs):
@@ -160,24 +109,16 @@ class Orcament(models.Model):
 
     def __str__(self):
         return self.title
-    
+
 
 class OrcamentMaterial(models.Model):
     orcament = models.ForeignKey(
-        Orcament,
-        on_delete=models.CASCADE,
-        related_name='material_items'
+        Orcament, on_delete=models.CASCADE, related_name="material_items"
     )
-    material = models.ForeignKey(
-        Material,
-        on_delete=models.CASCADE
-    )
+    material = models.ForeignKey(Material, on_delete=models.CASCADE)
 
     quantity = models.PositiveIntegerField(default=1)
-    unit_value = models.DecimalField(
-        max_digits=20,
-        decimal_places=2
-    )
+    unit_value = models.DecimalField(max_digits=20, decimal_places=2)
 
     @property
     def total_value(self):
@@ -188,27 +129,18 @@ class OrcamentMaterial(models.Model):
             self.unit_value = self.material.unit_value
         super().save(*args, **kwargs)
 
+
 class OrcamentService(models.Model):
     orcament = models.ForeignKey(
-        'Orcament',
-        on_delete=models.CASCADE,
-        related_name='service_items'
+        "Orcament", on_delete=models.CASCADE, related_name="service_items"
     )
-    service = models.ForeignKey(
-        Service,
-        on_delete=models.CASCADE
-    )
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)
 
     quantity = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        help_text='Quantidade em m², horas, etc.'
+        max_digits=10, decimal_places=2, help_text="Quantidade em m², horas, etc."
     )
 
-    unit_value = models.DecimalField(
-        max_digits=20,
-        decimal_places=2
-    )
+    unit_value = models.DecimalField(max_digits=20, decimal_places=2)
 
     @property
     def total_value(self):
@@ -229,17 +161,11 @@ class Plan(models.Model):
     def __str__(self):
         return self.name
 
+
 class UserPlan(models.Model):
-    user = models.OneToOneField(
-        User,
-        on_delete=models.CASCADE,
-        related_name='plan'
-    )
-    plan = models.ForeignKey(
-        Plan,
-        on_delete=models.PROTECT
-    )
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="plan")
+    plan = models.ForeignKey(Plan, on_delete=models.PROTECT)
     started_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.user.username} → {self.plan.name}'
+        return f"{self.user.username} → {self.plan.name}"
