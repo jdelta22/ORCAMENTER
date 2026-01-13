@@ -16,20 +16,28 @@ function Dashboard() {
   }, []);
 
   return (
-    <div>
+    <div className="dashboard">
       <h1>Meus Orçamentos</h1>
 
       {[...orcamentos]
         .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
         .map((orc) => (
-          <div
-            key={orc.id}
-            className="orcamento-card"
-            onClick={() => navigate(`/orcamentos/detail/${orc.id}`)}
-          >
+          <div key={orc.id} className="orcamento-card">
             <h3>{orc.title}</h3>
             <p>Cliente: {orc.client.name}</p>
             <p>Total: R$ {orc.total_value}</p>
+            <button
+              type="button"
+              onClick={() => navigate(`/orcamentos/detail/${orc.id}`)}
+            >
+              Visualizar
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate(`/orcamentos/edit/${orc.id}`)}
+            >
+              Edite
+            </button>
           </div>
         ))}
     </div>

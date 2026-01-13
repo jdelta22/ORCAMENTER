@@ -199,3 +199,15 @@ class PlanSerializer(serializers.ModelSerializer):
             "can_emit_invoice",
             "price",
         )
+
+
+class OrcamentMaterialCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrcamentMaterial
+        fields = (
+            "id",
+            "orcament",
+            "material",
+            "quantity",
+            "unit_value",
+        )

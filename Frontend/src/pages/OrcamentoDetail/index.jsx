@@ -36,12 +36,12 @@ function OrcamentoDetail() {
       <div className="material-information">
         <h2>Materiais</h2>
         {orcamento.materials.map((mat) => (
-          <p key={mat.id}>
+          <div key={mat.id}>
             <p>{mat.material_detail.description}</p>
             <p>Unidades = {mat.quantity}</p>
             <p>Valor unitario = R$ {mat.unit_value}</p>
             <p>R$ {mat.total_value}</p>
-          </p>
+          </div>
         ))}
       </div>
 

@@ -237,3 +237,21 @@ class MyPlanView(APIView):
     def get(self, request):
         plan = request.user.plan.plan
         return Response(PlanSerializer(plan).data)
+
+
+class OrcamentMaterialViewSet(ModelViewSet):
+    serializer_class = OrcamentMaterialCreateSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return OrcamentMaterial.objects.filter(orcament__owner=user)
+
+    def perform_create(self, serializer):
+        orcament = serializer.validated_data["orcament"]
+
+        if orcament.owner != self.request.user:
+            raise PermissionDenied("Você não pode alterar este orçamento")
+
+        serializer.save()
+        orcament.calculate_total()
