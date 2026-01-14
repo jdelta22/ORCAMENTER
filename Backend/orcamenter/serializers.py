@@ -211,3 +211,15 @@ class OrcamentMaterialCreateSerializer(serializers.ModelSerializer):
             "quantity",
             "unit_value",
         )
+
+
+class OrcamentServiceCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrcamentService
+        fields = (
+            "id",
+            "orcament",
+            "service",
+            "quantity",
+            "unit_value",
+        )

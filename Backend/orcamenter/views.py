@@ -10,7 +10,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from .models import Orcament
 from .permissions import IsOwnerOrVisitor
-from .serializers import *
+from .serializers import *  # noqa
 
 MAX_ANON_ORCAMENTS = 5
 
@@ -246,6 +246,24 @@ class OrcamentMaterialViewSet(ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         return OrcamentMaterial.objects.filter(orcament__owner=user)
+
+    def perform_create(self, serializer):
+        orcament = serializer.validated_data["orcament"]
+
+        if orcament.owner != self.request.user:
+            raise PermissionDenied("Você não pode alterar este orçamento")
+
+        serializer.save()
+        orcament.calculate_total()
+
+
+class OrcamentServiceViewSet(ModelViewSet):
+    serializer_class = OrcamentServiceCreateSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return OrcamentService.objects.filter(orcament__owner=user)
 
     def perform_create(self, serializer):
         orcament = serializer.validated_data["orcament"]

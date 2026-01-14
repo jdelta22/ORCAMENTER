@@ -2,25 +2,21 @@ import { useState } from "react";
 import api from "../../../services/api";
 
 function MaterialModal({ isOpen, onClose, onCreated }) {
-  const [description, setDescription] = useState("");
-  const [unit_description, setUnit_description] = useState("");
-  const [unit_value, setUnity_value] = useState("");
+  const [form, setForm] = useState({
+    description: "",
+    unit_description: "",
+    unit_value: "",
+  });
+  function handleChange(e) {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  }
 
   function handleSave() {
     api
-      .post("/materials/", {
-        description,
-        unit_description,
-        unit_value,
-      })
+      .post("/materials/", form)
       .then((res) => {
         onCreated(res.data); // 🔑 comunica o pai
-        onClose(); // 🔑 fecha modal
-
-        // limpa form
-        setDescription("");
-        setUnit_description("");
-        setUnity_value("");
+        setForm({ description: "", unit_description: "", unit_value: "" });
       })
       .catch(console.error);
   }
@@ -33,21 +29,27 @@ function MaterialModal({ isOpen, onClose, onCreated }) {
         <h2>Novo Material</h2>
 
         <input
-          placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          type="text"
+          name="description"
+          placeholder="Material"
+          value={form.description}
+          onChange={handleChange}
         />
 
         <input
+          type="text"
+          name="unit_description"
           placeholder="Unidade de Medida"
-          value={unit_description}
-          onChange={(e) => setUnit_description(e.target.value)}
+          value={form.unit_description}
+          onChange={handleChange}
         />
 
         <input
-          placeholder="Valor Unitario"
-          value={unit_value}
-          onChange={(e) => setUnity_value(e.target.value)}
+          type="number"
+          name="unit_value"
+          placeholder="Valor Unitário"
+          value={form.unit_value}
+          onChange={handleChange}
         />
 
         <button type="button" onClick={handleSave}>

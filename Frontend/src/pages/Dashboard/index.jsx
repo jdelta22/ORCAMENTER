@@ -38,6 +38,16 @@ function Dashboard() {
             >
               Edite
             </button>
+            <button
+              type="button"
+              onClick={() => {
+                api.delete(`/orcaments/${orc.id}/`).then(() => {
+                  setOrcamentos((prev) => prev.filter((o) => o.id !== orc.id));
+                });
+              }}
+            >
+              🗑
+            </button>
           </div>
         ))}
     </div>

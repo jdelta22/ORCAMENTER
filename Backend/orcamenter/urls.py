@@ -9,6 +9,7 @@ from .views import (
     ClientViewSet,
     MaterialViewSet,
     OrcamentMaterialViewSet,
+    OrcamentServiceViewSet,
     OrcamentViewSet,
     RegisterUserView,
     ServiceViewSet,
@@ -24,6 +25,11 @@ router.register(
     r"orcament-materials",
     OrcamentMaterialViewSet,
     basename="orcament-materials",
+)
+router.register(
+    r"orcament-services",
+    OrcamentServiceViewSet,
+    basename="orcament-services",
 )
 router.register(r"services", ServiceViewSet, basename="service")
 router.register(r"clients", ClientViewSet, basename="client")

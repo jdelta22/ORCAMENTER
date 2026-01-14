@@ -2,37 +2,21 @@ import { useEffect, useState } from "react";
 import api from "../../../services/api";
 import MaterialModal from "./MaterialModal";
 
-function MaterialSelect({ value, onChange }) {
-  const [materials, setMaterials] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-
-  useEffect(() => {
-    api.get("/materials/").then((res) => setMaterials(res.data));
-  }, []);
+function MaterialSelect({ onCreated }) {
+  const [open, setOpen] = useState(false);
 
   return (
     <>
-      <select value={value} onChange={(e) => onChange(e.target.value)}>
-        <option value="">Selecione um Material</option>
-
-        {materials.map((material) => (
-          <option key={material.id} value={material.id}>
-            {material.description} — {material.unit_description} —{" "}
-            {material.unit_value}
-          </option>
-        ))}
-      </select>
-
-      <button type="button" onClick={() => setShowModal(true)}>
+      <button type="button" onClick={() => setOpen(true)}>
         + Novo Material
       </button>
 
       <MaterialModal
-        isOpen={showModal}
-        onClose={() => setShowModal(false)}
+        isOpen={open}
+        onClose={() => setOpen(false)}
         onCreated={(material) => {
-          setClients((prev) => [...prev, material]);
-          onChange(material.id); // 🔑 seleciona automaticamente
+          onCreated?.(material); // opcional
+          setOpen(false);
         }}
       />
     </>
