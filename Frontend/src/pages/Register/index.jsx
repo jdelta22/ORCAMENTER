@@ -29,7 +29,7 @@ function Register() {
   return (
     <div className="Container">
       <h1>Cadastro</h1>
-      <form action="{handleRegister}">
+      <form action={handleRegister}>
         <input placeholder="Username" ref={inputName} />
         <input placeholder="Email" ref={inputEmail} />
         <input placeholder="Senha" type="password" ref={inputPassword} />

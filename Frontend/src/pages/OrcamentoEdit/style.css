@@ -1,26 +1,33 @@
-.editororcamneto {
+.editororcamento {
+  width: 100%;
+  height: 100%;
   display: flex;
-  flex-flow: column;
-  margin: 0 auto;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 30px;
+  padding: 20px;
+  box-sizing: border-box;
+  color: white;
 }
 
 form {
-  width: 80%;
+  width: 100%;
 }
 
-.baseEdit {
+.baseEdit,
+.materialEdit,
+.serviceEdit {
   display: flex;
   flex-flow: column;
-
+  border: 2px solid white;
+  padding: 10px;
   gap: 10px;
+  text-align: center;
 
   & input,
   select {
     border-radius: 10px;
-    font-size: 30px;
+    font-size: 20px;
     text-align: center;
     margin: 10px;
     padding: 20px;
@@ -28,7 +35,7 @@ form {
 
   & textarea {
     border-radius: 10px;
-    font-size: 30px;
+    font-size: 20px;
     text-align: center;
     margin: 10px;
     padding: 20px;
@@ -55,6 +62,8 @@ form {
   display: flex;
   gap: 1rem;
   align-items: center;
+  margin: 0 auto;
+  font-size: 20px;
 }
 
 button.danger {

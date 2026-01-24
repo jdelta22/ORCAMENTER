@@ -1,0 +1,53 @@
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background: #1f2937;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.2s;
+}
+
+.sidebar.open {
+  width: 220px;
+}
+
+.sidebar.closed {
+  width: 64px;
+}
+
+.sidebar button {
+  background: none;
+  border: none;
+  color: inherit;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.sidebar button:hover {
+  background: #374151;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  gap: 10px;
+}
+
+nav {
+  flex: 1;
+}
+
+.bottom {
+  padding: 12px;
+}
+
+.logout {
+  color: #f87171;
+}

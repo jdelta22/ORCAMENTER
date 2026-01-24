@@ -8,17 +8,19 @@ function Login() {
   const inputUsername = useRef(null);
   const inputPassword = useRef(null);
 
-  async function handleLogin() {
+  async function handleLogin(e) {
+    e.preventDefault();
+
     try {
       const response = await api.post("/login/", {
         username: inputUsername.current.value,
         password: inputPassword.current.value,
       });
 
-      // futuramente será JWT
-      localStorage.setItem("token", response.data.access);
+      localStorage.setItem("access", response.data.access);
+      localStorage.setItem("refresh", response.data.refresh);
 
-      navigate("/Dashboard");
+      navigate("/dashboard");
     } catch (error) {
       alert("Usuário ou senha inválidos");
     }
@@ -27,15 +29,10 @@ function Login() {
   return (
     <div className="Container">
       <h1>Login</h1>
-      <form action={handleLogin}>
-        <input placeholder="Username" name="username" ref={inputUsername} />
-        <input
-          placeholder="Senha"
-          type="password"
-          name="password"
-          ref={inputPassword}
-        />
-        <button onClick="submit">Entrar</button>
+      <form onSubmit={handleLogin}>
+        <input placeholder="Username" ref={inputUsername} />
+        <input placeholder="Senha" type="password" ref={inputPassword} />
+        <button type="submit">Entrar</button>
       </form>
     </div>
   );

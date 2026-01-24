@@ -1,57 +1,17 @@
-.Container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-}
-
 h1 {
   color: #fff;
   font-size: 32px;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  padding: 30px;
-  border-radius: 10px;
-  background-color: rgb(42, 42, 146);
-  margin-bottom: 20px;
-  max-width: 50%;
-  width: 400px;
-
-  & button {
-    border-radius: 30px;
-    background-color: #8b8ae1;
-    font-weight: bold;
-    height: 40px;
-    border: none;
-    cursor: pointer;
-  }
-  & button:hover {
-    opacity: 0.8;
-  }
-
-  & input {
-    height: 30px;
-    border-radius: 5px;
-    border: none;
-    padding: 5px;
-    text-align: center;
-  }
 }
 
 .orcamento-detail-container {
   display: block;
   justify-content: space-between;
   align-items: center;
-  margin: 0 auto;
+
   background-color: rgb(42, 42, 146);
   padding: 20px;
   border-radius: 10px;
-  max-width: 70%;
+  max-width: 100%;
   margin-bottom: 10px;
   color: #fff;
 }

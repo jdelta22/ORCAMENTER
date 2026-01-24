@@ -1,18 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-function OrcamentoForm({ children, onSubmit }) {
+function OrcamentoForm({ onSubmit, children }) {
+  const navigate = useNavigate();
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        onSubmit();
-      }}
-    >
-      <h1>Editar Orçamento</h1>
+    <form onSubmit={onSubmit}>
       {children}
       <button type="submit">Salvar</button>
     </form>
   );
 }
+
 export default OrcamentoForm;

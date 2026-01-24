@@ -132,6 +132,7 @@ class OrcamentWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Orcament
         fields = (
+            "id",
             "title",
             "description",
             "client",
