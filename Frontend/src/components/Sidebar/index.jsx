@@ -23,15 +23,15 @@ function Sidebar() {
         <button onClick={() => navigate("/dashboard")}>
           📊 {open && "Dashboard"}
         </button>
-        <button onClick={() => navigate("/clientes")}>
+        <button onClick={() => navigate("/clients")}>
           👤 {open && "Clientes"}
         </button>
 
-        <button onClick={() => navigate("/servicos")}>
+        <button onClick={() => navigate("/services")}>
           🛠 {open && "Serviços"}
         </button>
 
-        <button onClick={() => navigate("/materiais")}>
+        <button onClick={() => navigate("/materials")}>
           📦 {open && "Materiais"}
         </button>
       </nav>

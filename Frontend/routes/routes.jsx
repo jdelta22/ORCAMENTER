@@ -7,6 +7,9 @@ import OrcamentoDetail from "../src/pages/OrcamentoDetail";
 import OrcamentoEdit from "../src/pages/OrcamentoEdit";
 import ProtectedRoute from "../routes/ProtectedRoute";
 import DashboardLayout from "../src/layouts/DashboardLayout";
+import Clients from "../src/pages/ClientsDashboard";
+import Materials from "../src/pages/MaterialsDasboard";
+import Services from "../src/pages/ServicesDashboard";
 
 export default function AppRoutes() {
   return (
@@ -51,6 +54,37 @@ export default function AppRoutes() {
             <ProtectedRoute>
               <DashboardLayout>
                 <OrcamentoEdit />
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/clients/"
+          element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <Clients />
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/materials/"
+          element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <Materials />
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/services/"
+          element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <Services />
               </DashboardLayout>
             </ProtectedRoute>
           }
