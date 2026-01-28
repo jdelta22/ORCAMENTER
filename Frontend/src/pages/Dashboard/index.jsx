@@ -11,37 +11,34 @@ function Dashboard() {
     api
       .get("/orcaments/")
       .then((res) => setOrcamentos(res.data))
-      .catch((err) => console.error(err));
+      .catch(console.error);
   }, []);
 
   return (
-    <div className="Container">
-      <div className="dashboard">
+    <div className="dashboard">
+      <div className="dashboard-header">
         <h1>Meus Orçamentos</h1>
         <button onClick={() => navigate("/orcamentos/create")}>
           Novo Orçamento
         </button>
-        {[...orcamentos]
-          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-          .map((orc) => (
-            <div key={orc.id} className="orcamento-card">
-              <h3>{orc.title}</h3>
-              <p>Cliente: {orc.client.name}</p>
-              <p>Total: R$ {orc.total_value}</p>
-              <button
-                type="button"
-                onClick={() => navigate(`/orcamentos/detail/${orc.id}`)}
-              >
+      </div>
+
+      {[...orcamentos]
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+        .map((orc) => (
+          <div key={orc.id} className="orcamento-card">
+            <h3>{orc.title}</h3>
+            <p>Cliente: {orc.client.name}</p>
+            <p>Total: R$ {orc.total_value}</p>
+
+            <div className="buttons">
+              <button onClick={() => navigate(`/orcamentos/detail/${orc.id}`)}>
                 Visualizar
               </button>
-              <button
-                type="button"
-                onClick={() => navigate(`/orcamentos/edit/${orc.id}`)}
-              >
-                Edite
+              <button onClick={() => navigate(`/orcamentos/edit/${orc.id}`)}>
+                Editar
               </button>
               <button
-                type="button"
                 onClick={() => {
                   api.delete(`/orcaments/${orc.id}/`).then(() => {
                     setOrcamentos((prev) =>
@@ -53,8 +50,8 @@ function Dashboard() {
                 🗑
               </button>
             </div>
-          ))}
-      </div>
+          </div>
+        ))}
     </div>
   );
 }

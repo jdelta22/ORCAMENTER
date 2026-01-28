@@ -1,0 +1,16 @@
+:root {
+  --primary: #1f2937;
+  --secondary: #8b8ae1;
+  --danger: #f87171;
+
+  --radius: 10px;
+  --transition: 0.2s;
+
+  --sidebar-open: 260px;
+  --sidebar-collapsed: 72px;
+
+  --button-bg: #118085;
+  --button-bg-hover: #0e6a6e;
+  --button-radius: 10px;
+  --button-padding: 10px 14px;
+}

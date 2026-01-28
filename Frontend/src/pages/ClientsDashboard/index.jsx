@@ -39,28 +39,36 @@ function Clients() {
   }
 
   return (
-    <div className="Container">
-      <div className="dashboard">
-        <h1>Meus Clients</h1>
+    <div className="dashboard">
+      <div className="dashboard-header">
+        <h1>Meus Clientes</h1>
         <button onClick={handleNew}>Novo cliente</button>
+      </div>
+
+      <div className="card-container">
         {clients.map((client) => (
           <div className="client-card" key={client.id} value={client.id}>
-            <p>cliente: {client.name}</p>
+            <h3>{client.name}</h3>
             <p>numero do documento: {client.document_number}</p>
             <p>tipo do documento: {client.document_type}</p>
             <p>Email: {client.email}</p>
             <p>Telefone: {client.phone}</p>
-            <button onClick={() => handleEdit(client)}>Editar</button>
-            <button
-              type="button"
-              onClick={() => {
-                api.delete(`/clients/${client.id}/`).then(() => {
-                  setClients((prev) => prev.filter((c) => c.id !== client.id));
-                });
-              }}
-            >
-              Deletar
-            </button>
+
+            <div className="client-buttons">
+              <button onClick={() => handleEdit(client)}>Editar</button>
+              <button
+                type="button"
+                onClick={() => {
+                  api.delete(`/clients/${client.id}/`).then(() => {
+                    setClients((prev) =>
+                      prev.filter((c) => c.id !== client.id),
+                    );
+                  });
+                }}
+              >
+                Deletar
+              </button>
+            </div>
           </div>
         ))}
 

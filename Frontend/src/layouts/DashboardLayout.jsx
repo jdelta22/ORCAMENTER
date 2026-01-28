@@ -1,14 +1,15 @@
 import Sidebar from "../components/Sidebar";
+import MobileMenuButton from "../components/MobileMenuButton";
+import Overlay from "../components/Overlay";
+import "./DashboardLayout.css";
 
-function DashboardLayout({ children }) {
+export default function DashboardLayout({ children }) {
   return (
-    <div style={{ display: "flex" }}>
+    <div className="app-layout">
+      <MobileMenuButton />
       <Sidebar />
-      <main style={{ marginLeft: 220, padding: 20, width: "100%" }}>
-        {children}
-      </main>
+      <Overlay />
+      <main className="app-content">{children}</main>
     </div>
   );
 }
-
-export default DashboardLayout;

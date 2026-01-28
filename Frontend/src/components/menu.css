@@ -1,0 +1,32 @@
+.menu-btn {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 1100;
+
+  background: #1f2937;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+}
+
+@media (min-width: 769px) {
+  .menu-btn {
+    display: none;
+  }
+}
+
+.overlay {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .overlay.show {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 900;
+  }
+}
