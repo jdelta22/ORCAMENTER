@@ -1,41 +1,43 @@
-h1 {
-  color: #fff;
-  font-size: 32px;
-}
-
-.orcamento-detail-container {
-  display: block;
-  justify-content: space-between;
-  align-items: center;
-
-  background-color: rgb(42, 42, 146);
-  padding: 20px;
+.section-card {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
   border-radius: 10px;
-  max-width: 100%;
-  margin-bottom: 10px;
-  color: #fff;
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.orcamento-information {
-  border: 1px solid #8b8ae1;
-  padding: 10px;
-  margin-bottom: 10px;
+.section-card h3 {
+  font-size: 18px;
+  color: #111827;
 }
 
-.client-information {
-  border: 1px solid #8b8ae1;
-  padding: 10px;
-  margin-bottom: 10px;
+.row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  align-items: center;
+  gap: 12px;
+
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+
+  font-size: 14px;
+  color: #1f2937;
 }
 
-.material-information {
-  border: 1px solid #8b8ae1;
-  padding: 10px;
-  margin-bottom: 10px;
+.row + .row {
+  margin-top: 8px;
 }
 
-.service-information {
-  border: 1px solid #8b8ae1;
-  padding: 10px;
-  margin-bottom: 10px;
+.total-card {
+  padding: 16px;
+  border-radius: 10px;
+  background: #111827;
+  color: #ffffff;
+  font-size: 18px;
+  text-align: right;
 }

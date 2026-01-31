@@ -1,5 +1,8 @@
+import re
+
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from validate_docbr import CNPJ, CPF
 
 from .models import (
     Client,
@@ -35,6 +38,24 @@ class ServiceSerializer(serializers.ModelSerializer):
 
 
 class ClientSerializer(serializers.ModelSerializer):
+    def validate_document_number(self, value):
+        document = value.replace(".", "").replace("-", "").replace("/", "")
+
+        doc_type = self.initial_data.get("document_type")
+
+        if doc_type == Client.CPF:
+            if not CPF().validate(document):
+                raise serializers.ValidationError("CPF inválido")
+
+        elif doc_type == Client.CNPJ:
+            if not CNPJ().validate(document):
+                raise serializers.ValidationError("CNPJ inválido")
+
+        else:
+            raise serializers.ValidationError("Tipo de documento inválido")
+
+        return document  # SEM máscara
+
     class Meta:
         model = Client
         fields = (
@@ -176,6 +197,7 @@ class OrcamentWriteSerializer(serializers.ModelSerializer):
 
 
 class RegisterUserSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
 
     class Meta:
@@ -189,6 +211,23 @@ class RegisterUserSerializer(serializers.ModelSerializer):
             password=validated_data["password"],
         )
         return user
+
+    def validate_email(self, value):
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("Email já cadastrado")
+        return value
+
+    def validate_password(self, value):
+        if len(value) < 8:
+            raise serializers.ValidationError("A senha deve ter no mínimo 8 caracteres")
+
+        if not re.search(r"[A-Za-z]", value):
+            raise serializers.ValidationError("A senha deve conter ao menos uma letra")
+
+        if not re.search(r"\d", value):
+            raise serializers.ValidationError("A senha deve conter ao menos um número")
+
+        return value
 
 
 class PlanSerializer(serializers.ModelSerializer):

@@ -1,80 +1,69 @@
-.editororcamento {
-  width: 100%;
-  height: 100%;
+.section-card {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 20px;
+
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  box-sizing: border-box;
-  color: white;
+  gap: 16px;
 }
 
-form {
-  width: 100%;
+.section-card h3 {
+  font-size: 18px;
+  color: #111827;
 }
 
-.baseEdit,
-.materialEdit,
-.serviceEdit {
-  display: flex;
-  flex-flow: column;
-  border: 2px solid white;
-  padding: 10px;
-  gap: 10px;
-  text-align: center;
+/* BASE GRID */
+.base-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
 
-  & input,
-  select {
-    border-radius: 10px;
-    font-size: 20px;
-    text-align: center;
-    margin: 10px;
-    padding: 20px;
-  }
-
-  & textarea {
-    border-radius: 10px;
-    font-size: 20px;
-    text-align: center;
-    margin: 10px;
-    padding: 20px;
-    height: auto;
+@media (max-width: 768px) {
+  .base-grid {
+    grid-template-columns: 1fr;
   }
 }
 
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal {
-  background: white;
-  padding: 1rem;
-  pointer-events: auto;
-}
-
+/* LINHAS (MATERIAIS / SERVIÇOS) */
 .row {
-  display: flex;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr auto;
   align-items: center;
-  margin: 0 auto;
-  font-size: 20px;
+  gap: 12px;
+
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+
+  font-size: 14px;
+  color: #1f2937;
 }
 
+.row + .row {
+  margin-top: 8px;
+}
+
+/* BOTÃO DE REMOVER */
 button.danger {
-  background: #e74c3c;
-  color: white;
-  border: none;
-  padding: 0.4rem 0.6rem;
-  border-radius: 4px;
-  cursor: pointer;
+  background: #ef4444;
 }
 
 button.danger:hover {
-  background: #c0392b;
+  background: #dc2626;
+}
+
+/* TOTAL */
+.total-card {
+  margin-top: 10px;
+  padding: 16px;
+  border-radius: 10px;
+
+  background: #111827;
+  color: #ffffff;
+  font-size: 18px;
+  text-align: right;
 }

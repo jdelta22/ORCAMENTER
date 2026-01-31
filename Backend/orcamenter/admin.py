@@ -8,6 +8,7 @@ from .models import (
     OrcamentService,
     Plan,
     Service,
+    Subscription,
 )
 
 
@@ -93,3 +94,10 @@ class OrcamentAdmin(admin.ModelAdmin):
 class PlanAdmin(admin.ModelAdmin):
     list_display = ("name", "price", "can_emit_invoice")
     search_fields = ("name",)
+
+
+@admin.register(Subscription)
+class SubscriptionAdmin(admin.ModelAdmin):
+    list_display = ("user", "plan", "started_at", "expires_at")
+    search_fields = ("user__username", "plan__name")
+    list_filter = ("plan",)

@@ -48,13 +48,11 @@ function ClientModal({ isOpen, onClose, onCreated }) {
     <div className="modal-overlay">
       <div className="modal">
         <h2>Novo Cliente</h2>
-
         <input
           placeholder="Nome"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
-
         <input
           placeholder="CPF/CNPJ"
           value={documentNumber}
@@ -64,28 +62,26 @@ function ClientModal({ isOpen, onClose, onCreated }) {
             setDocumentType(getDocumentType(value));
           }}
         />
-
         {documentType && <p>Tipo detectado: {documentType}</p>}
-
         <input
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-
         <input
           placeholder="Telefone"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
         />
+        <div className="modal-buttons">
+          <button type="button" onClick={handleSave}>
+            Salvar
+          </button>
 
-        <button type="button" onClick={handleSave}>
-          Salvar
-        </button>
-
-        <button type="button" onClick={onClose}>
-          Cancelar
-        </button>
+          <button type="button" onClick={onClose}>
+            Cancelar
+          </button>
+        </div>
       </div>
     </div>
   );

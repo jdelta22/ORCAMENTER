@@ -62,4 +62,14 @@
 .client-buttons {
   display: flex;
   gap: 10px;
+  margin: 0 auto;
+}
+.client-buttons button {
+  background: var(--button-bg);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--button-radius);
+  padding: var(--button-padding);
+  cursor: pointer;
+  transition: background var(--transition);
 }

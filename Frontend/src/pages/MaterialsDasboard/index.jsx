@@ -41,41 +41,47 @@ function Materials() {
   }
 
   return (
-    <div className="Container">
-      <div className="dashboard">
+    <div className="dashboard">
+      <div className="dashboard-header">
         <h1>Meus Materials</h1>
-        <button onClick={handleNew}>Novo materiale</button>
+        <button onClick={handleNew}>Novo material</button>
+      </div>
+
+      <div className="card-container">
         {materials.map((material) => (
           <div className="material-card" key={material.id} value={material.id}>
-            <p>Material: {material.description}</p>
+            <h3>Material: {material.description}</h3>
             <p>Unidade: {material.unit_description}</p>
             <p>Valor: {material.unit_value}</p>
-            <button onClick={() => handleEdit(material)}>Editar</button>
-            <button
-              type="button"
-              onClick={() => {
-                api.delete(`/materials/${material.id}/`).then(() => {
-                  setMaterials((prev) =>
-                    prev.filter((c) => c.id !== material.id),
-                  );
-                });
-              }}
-            >
-              Deletar
-            </button>
+
+            <div className="material-buttons">
+              <button onClick={() => handleEdit(material)}>Editar</button>
+              <button
+                type="button"
+                onClick={() => {
+                  api.delete(`/materials/${material.id}/`).then(() => {
+                    setMaterials((prev) =>
+                      prev.filter((c) => c.id !== material.id),
+                    );
+                  });
+                }}
+              >
+                Deletar
+              </button>
+            </div>
           </div>
         ))}
-
-        <MaterialModal
-          isOpen={showModal}
-          material={selectedMaterial}
-          onClose={() => {
-            setShowModal(false);
-            setSelectedMaterial(null);
-          }}
-          onSaved={handleSaved}
-        />
       </div>
+
+      <MaterialModal
+        isOpen={showModal}
+        material={selectedMaterial}
+        onClose={() => {
+          setShowModal(false);
+          setSelectedMaterial(null);
+        }}
+        onSaved={handleSaved}
+      />
     </div>
   );
 }

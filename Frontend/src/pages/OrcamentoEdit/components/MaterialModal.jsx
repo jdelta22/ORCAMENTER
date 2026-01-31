@@ -51,14 +51,15 @@ function MaterialModal({ isOpen, onClose, onCreated }) {
           value={form.unit_value}
           onChange={handleChange}
         />
+        <div className="modal-buttons">
+          <button type="button" onClick={handleSave}>
+            Salvar
+          </button>
 
-        <button type="button" onClick={handleSave}>
-          Salvar
-        </button>
-
-        <button type="button" onClick={onClose}>
-          Cancelar
-        </button>
+          <button type="button" onClick={onClose}>
+            Cancelar
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -82,94 +82,105 @@ function OrcamentoEdit() {
   }
 
   return (
-    <div className="Container">
-      <button type="button" onClick={() => navigate("/dashboard/")}>
-        Voltar para orçamentos
-      </button>
-      <div className="editororcamento">
-        <OrcamentoForm onSubmit={handleSave}>
-          {/* BASE */}
-          <div className="baseEdit">
+    <div className="dashboard">
+      <div className="dashboard-header">
+        <h1>Editar Orçamento</h1>
+        <button type="button" onClick={() => navigate("/dashboard/")}>
+          Voltar para orçamentos
+        </button>
+      </div>
+
+      <OrcamentoForm onSubmit={handleSave}>
+        {/* BASE */}
+        <div className="section-card">
+          <h3>Informações básicas</h3>
+          <div className="base-grid">
             <OrcamentoBase form={form} setForm={setForm} />
             <ClientSelect value={clientId} onChange={setClientId} />
           </div>
+        </div>
 
-          {/* MATERIAIS */}
-          {orcamentoId && (
-            <div className="materialEdit">
-              <MaterialsEditor
-                key={materialReloadKey}
-                orcamentoId={orcamentoId}
-                onChange={loadOrcamento}
-              />
+        {/* MATERIAIS */}
+        {orcamentoId && (
+          <div className="section-card">
+            <h3>Materiais</h3>
+            <MaterialsEditor
+              key={materialReloadKey}
+              orcamentoId={orcamentoId}
+              onChange={loadOrcamento}
+            />
 
-              <MaterialSelect
-                onCreated={() => setMaterialReloadKey((prev) => prev + 1)}
-              />
-              <h3>Materiais adicionados</h3>
+            <MaterialSelect
+              onCreated={() => setMaterialReloadKey((prev) => prev + 1)}
+            />
+            <h3>Materiais adicionados</h3>
 
-              {orcamento?.materials.map((mat) => (
-                <div key={mat.id} className="row">
-                  <span>{mat.material_detail.description}</span>
-                  <span>Qtd: {mat.quantity}</span>
-                  <span>Unit: R$ {mat.unit_value}</span>
-                  <span>Total: R$ {mat.total_value}</span>
-                  <button
-                    type="button"
-                    className="danger"
-                    onClick={() =>
-                      api
-                        .delete(`/orcament-materials/${mat.id}/`)
-                        .then(() => loadOrcamento())
-                    }
-                  >
-                    🗑
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
+            {orcamento?.materials.map((mat) => (
+              <div key={mat.id} className="row">
+                <span>{mat.material_detail.description}</span>
+                <span>Qtd: {mat.quantity}</span>
+                <span>Unit: R$ {mat.unit_value}</span>
+                <span>Total: R$ {mat.total_value}</span>
+                <button
+                  type="button"
+                  className="danger"
+                  onClick={() =>
+                    api
+                      .delete(`/orcament-materials/${mat.id}/`)
+                      .then(() => loadOrcamento())
+                  }
+                >
+                  🗑
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
 
-          {/* SERVIÇOS */}
-          {orcamentoId && (
-            <div className="serviceEdit">
-              <ServicesEditor
-                key={serviceReloadKey}
-                orcamentoId={orcamentoId}
-                onChange={loadOrcamento}
-              />
+        {/* SERVIÇOS */}
+        {orcamentoId && (
+          <div className="section-card">
+            <h3>Serviços</h3>
+            <ServicesEditor
+              key={serviceReloadKey}
+              orcamentoId={orcamentoId}
+              onChange={loadOrcamento}
+            />
 
-              <ServiceSelect
-                onCreated={() => setServiceReloadKey((prev) => prev + 1)}
-              />
-              <h3>Serviços adicionados</h3>
+            <ServiceSelect
+              onCreated={() => setServiceReloadKey((prev) => prev + 1)}
+            />
+            <h3>Serviços adicionados</h3>
 
-              {orcamento?.services.map((ser) => (
-                <div key={ser.id} className="row">
-                  <span>{ser.service_detail.description}</span>
-                  <span>Qtd: {ser.quantity}</span>
-                  <span>Unit: R$ {ser.unit_value}</span>
-                  <span>Total: R$ {ser.total_value}</span>
-                  <button
-                    type="button"
-                    className="danger"
-                    onClick={() =>
-                      api
-                        .delete(`/orcament-services/${ser.id}/`)
-                        .then(() => loadOrcamento())
-                    }
-                  >
-                    🗑
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
+            {orcamento?.services.map((ser) => (
+              <div key={ser.id} className="row">
+                <span>{ser.service_detail.description}</span>
+                <span>Qtd: {ser.quantity}</span>
+                <span>Unit: R$ {ser.unit_value}</span>
+                <span>Total: R$ {ser.total_value}</span>
+                <button
+                  type="button"
+                  className="danger"
+                  onClick={() =>
+                    api
+                      .delete(`/orcament-services/${ser.id}/`)
+                      .then(() => loadOrcamento())
+                  }
+                >
+                  🗑
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
 
-          {/* TOTAL */}
-          {orcamento && <h2>Total do orçamento: R$ {orcamento.total_value}</h2>}
-        </OrcamentoForm>
-      </div>
+        {/* TOTAL */}
+        {orcamento && (
+          <div className="total-card">
+            Total do orçamento: <strong>R$ {orcamento.total_value}</strong>
+          </div>
+        )}
+      </OrcamentoForm>
     </div>
   );
 }

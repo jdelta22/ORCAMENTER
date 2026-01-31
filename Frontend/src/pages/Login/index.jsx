@@ -27,13 +27,15 @@ function Login() {
   }
 
   return (
-    <div className="Container">
-      <h1>Login</h1>
-      <form onSubmit={handleLogin}>
-        <input placeholder="Username" ref={inputUsername} />
-        <input placeholder="Senha" type="password" ref={inputPassword} />
-        <button type="submit">Entrar</button>
-      </form>
+    <div className="Container-page">
+      <div className="login-container">
+        <h1>Login</h1>
+        <form onSubmit={handleLogin}>
+          <input placeholder="Username" ref={inputUsername} />
+          <input placeholder="Senha" type="password" ref={inputPassword} />
+          <button type="submit">Entrar</button>
+        </form>
+      </div>
     </div>
   );
 }

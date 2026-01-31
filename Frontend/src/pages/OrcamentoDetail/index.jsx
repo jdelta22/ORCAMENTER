@@ -21,52 +21,77 @@ function OrcamentoDetail() {
   if (!orcamento) return <p>Carregando...</p>;
 
   return (
-    <div className="Container">
-      <button type="button" onClick={() => navigate("/dashboard/")}>
-        Voltar para orçamentos
-      </button>
-      <div className="orcamento-detail-container">
-        <div className="orcamento-information">
-          <h1>Titulo: {orcamento.title}</h1>
-          <p>Descrição: {orcamento.description}</p>
-          <p>Data de confirmação: {orcamento.created_at}</p>
-        </div>
+    <div className="dashboard">
+      {/* HEADER */}
+      <div className="dashboard-header">
+        <h1>Detalhes do Orçamento</h1>
+        <button type="button" onClick={() => navigate("/dashboard/")}>
+          Voltar
+        </button>
+      </div>
 
-        <div className="client-information">
-          <h2>Cliente</h2>
-          <p>Nome: {orcamento.client.name}</p>
-          <p>Numero do documento: {orcamento.client.document_number}</p>
-          <p>Tipo do documento: {orcamento.client.document_type}</p>
-          <p>E-mail: {orcamento.client.email}</p>
-        </div>
+      {/* INFORMAÇÕES DO ORÇAMENTO */}
+      <div className="section-card">
+        <h3>Orçamento</h3>
+        <p>
+          <strong>Título:</strong> {orcamento.title}
+        </p>
+        <p>
+          <strong>Descrição:</strong> {orcamento.description}
+        </p>
+        <p>
+          <strong>Data:</strong> {orcamento.created_at}
+        </p>
+      </div>
 
-        <div className="material-information">
-          <h2>Materiais</h2>
-          {orcamento.materials.map((mat) => (
-            <div key={mat.id}>
-              <p>{mat.material_detail.description}</p>
-              <p>Unidades = {mat.quantity}</p>
-              <p>Valor unitario = R$ {mat.unit_value}</p>
-              <p>R$ {mat.total_value}</p>
-            </div>
-          ))}
-        </div>
+      {/* CLIENTE */}
+      <div className="section-card">
+        <h3>Cliente</h3>
+        <p>
+          <strong>Nome:</strong> {orcamento.client.name}
+        </p>
+        <p>
+          <strong>Documento:</strong> {orcamento.client.document_number}
+        </p>
+        <p>
+          <strong>Tipo:</strong> {orcamento.client.document_type}
+        </p>
+        <p>
+          <strong>Email:</strong> {orcamento.client.email}
+        </p>
+      </div>
 
-        <div className="service-information">
-          <h2>Serviços</h2>
-          {orcamento.services.map((serv) => (
-            <div key={serv.id}>
-              <p>
-                {serv.service_detail.description} — {serv.unit_description} —
-                {serv.quantity} — R$ {serv.total_value}
-              </p>
-            </div>
-          ))}
-        </div>
+      {/* MATERIAIS */}
+      <div className="section-card">
+        <h3>Materiais</h3>
 
-        <div className="orcamento-information">
-          <h1>Total: R$ {orcamento.total_value}</h1>
-        </div>
+        {orcamento.materials.map((mat) => (
+          <div key={mat.id} className="row">
+            <span>{mat.material_detail.description}</span>
+            <span>Qtd: {mat.quantity}</span>
+            <span>Unit: R$ {mat.unit_value}</span>
+            <span>Total: R$ {mat.total_value}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* SERVIÇOS */}
+      <div className="section-card">
+        <h3>Serviços</h3>
+
+        {orcamento.services.map((serv) => (
+          <div key={serv.id} className="row">
+            <span>{serv.service_detail.description}</span>
+            <span>{serv.unit_description}</span>
+            <span>Qtd: {serv.quantity}</span>
+            <span>Total: R$ {serv.total_value}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* TOTAL */}
+      <div className="total-card">
+        Total do orçamento: <strong>R$ {orcamento.total_value}</strong>
       </div>
     </div>
   );

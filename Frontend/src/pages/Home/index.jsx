@@ -7,25 +7,29 @@ function Home() {
   const navigate = useNavigate();
 
   return (
-    <div className="Container">
-      <div className="apresentation">
+    <div className="Container-page">
+      <div className="home-container">
         <h1>Orçamenter</h1>
         <h2>Seu orçamento, fácil e rápido</h2>
+
         <p>
-          <p>
-            O Orçamenter é uma aplicação web desenvolvida para facilitar a
-            criação e o gerenciamento de orçamentos para pequenos negócios e
-            profissionais autônomos.
-          </p>{" "}
-          <p>
-            Com uma interface intuitiva e recursos práticos, o Orçamenter
-            permite que você crie orçamentos personalizados em poucos minutos,
-            acompanhe o status dos seus projetos e mantenha um histórico
-            organizado de todas as suas transações.
-          </p>
+          O Orçamenter é uma aplicação web desenvolvida para facilitar a criação
+          e o gerenciamento de orçamentos para pequenos negócios e profissionais
+          autônomos.
         </p>
-        <button onClick={() => navigate("/register")}>Registre-se</button>
-        <button onClick={() => navigate("/login")}>Login</button>
+
+        <p>
+          Crie orçamentos personalizados em poucos minutos, acompanhe o status
+          dos seus projetos e mantenha um histórico organizado de todas as suas
+          transações.
+        </p>
+
+        <div className="home-actions">
+          <button onClick={() => navigate("/register")}>Registre-se</button>
+          <button className="secondary" onClick={() => navigate("/login")}>
+            Login
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -41,41 +41,47 @@ function Services() {
   }
 
   return (
-    <div className="Container">
-      <div className="dashboard">
+    <div className="dashboard">
+      <div className="dashboard-header">
         <h1>Meus Services</h1>
         <button onClick={handleNew}>Novo servicee</button>
+      </div>
+
+      <div className="card-container">
         {services.map((service) => (
           <div className="service-card" key={service.id} value={service.id}>
-            <p>Service: {service.description}</p>
+            <h3>Service: {service.description}</h3>
             <p>Unidade: {service.unit_description}</p>
             <p>Valor: {service.unit_value}</p>
-            <button onClick={() => handleEdit(service)}>Editar</button>
-            <button
-              type="button"
-              onClick={() => {
-                api.delete(`/services/${service.id}/`).then(() => {
-                  setServices((prev) =>
-                    prev.filter((c) => c.id !== service.id),
-                  );
-                });
-              }}
-            >
-              Deletar
-            </button>
+
+            <div className="service-buttons">
+              <button onClick={() => handleEdit(service)}>Editar</button>
+              <button
+                type="button"
+                onClick={() => {
+                  api.delete(`/services/${service.id}/`).then(() => {
+                    setServices((prev) =>
+                      prev.filter((c) => c.id !== service.id),
+                    );
+                  });
+                }}
+              >
+                Deletar
+              </button>
+            </div>
           </div>
         ))}
-
-        <ServiceModal
-          isOpen={showModal}
-          service={selectedService}
-          onClose={() => {
-            setShowModal(false);
-            setSelectedService(null);
-          }}
-          onSaved={handleSaved}
-        />
       </div>
+
+      <ServiceModal
+        isOpen={showModal}
+        service={selectedService}
+        onClose={() => {
+          setShowModal(false);
+          setSelectedService(null);
+        }}
+        onSaved={handleSaved}
+      />
     </div>
   );
 }

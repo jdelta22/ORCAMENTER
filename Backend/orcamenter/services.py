@@ -1,39 +1,28 @@
-from .models import Orcament, Client, Material, Service
+from datetime import timedelta
 
-def migrate_visitor_to_user(visitor_id, user):
-    """
-    Converte todos os dados criados como visitante
-    para um usuário autenticado.
-    """
+from django.utils import timezone
 
-    Orcament.objects.filter(
-        visitor_id=visitor_id,
-        owner__isnull=True
-    ).update(
-        owner=user,
-        visitor_id=None
-    )
+from .models import Plan, Subscription
 
-    Client.objects.filter(
-        visitor_id=visitor_id,
-        owner__isnull=True
-    ).update(
-        owner=user,
-        visitor_id=None
-    )
 
-    Material.objects.filter(
-        visitor_id=visitor_id,
-        owner__isnull=True
-    ).update(
-        owner=user,
-        visitor_id=None
-    )
+def activate_subscription(user, cycle):
+    plan = Plan.objects.get(code="premium")
 
-    Service.objects.filter(
-        visitor_id=visitor_id,
-        owner__isnull=True
-    ).update(
-        owner=user,
-        visitor_id=None
+    if cycle == Subscription.MONTHLY:
+        duration = 30
+        price = 29.90
+    else:
+        duration = 365
+        price = 299.00
+
+    Subscription.objects.update_or_create(
+        user=user,
+        defaults={
+            "plan": plan,
+            "cycle": cycle,
+            "price": price,
+            "started_at": timezone.now(),
+            "expires_at": timezone.now() + timedelta(days=duration),
+            "active": True,
+        },
     )
