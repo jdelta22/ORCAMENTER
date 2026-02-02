@@ -109,18 +109,21 @@ class OrcamentMaterial(models.Model):
     orcament = models.ForeignKey(
         Orcament, on_delete=models.CASCADE, related_name="material_items"
     )
-    material = models.ForeignKey(Material, on_delete=models.CASCADE)
+    material = models.ForeignKey(Material, on_delete=models.PROTECT)
 
     quantity = models.PositiveIntegerField(default=1)
-    unit_value = models.DecimalField(max_digits=20, decimal_places=2)
-
-    @property
-    def total_value(self):
-        return self.quantity * self.unit_value
+    unit_value = models.DecimalField(
+        max_digits=20, decimal_places=2, null=True, blank=True
+    )
+    total_value = models.DecimalField(
+        max_digits=20, decimal_places=2, null=True, blank=True
+    )
 
     def save(self, *args, **kwargs):
         if self.unit_value is None:
             self.unit_value = self.material.unit_value
+
+        self.total_value = self.unit_value * self.quantity
         super().save(*args, **kwargs)
 
 
@@ -128,21 +131,26 @@ class OrcamentService(models.Model):
     orcament = models.ForeignKey(
         "Orcament", on_delete=models.CASCADE, related_name="service_items"
     )
-    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    service = models.ForeignKey(Service, on_delete=models.PROTECT)
 
     quantity = models.DecimalField(
-        max_digits=10, decimal_places=2, help_text="Quantidade em m², horas, etc."
+        max_digits=10,
+        decimal_places=2,
+        help_text="Quantidade em m², horas, etc.",
     )
 
-    unit_value = models.DecimalField(max_digits=20, decimal_places=2)
-
-    @property
-    def total_value(self):
-        return self.quantity * self.unit_value
+    unit_value = models.DecimalField(
+        max_digits=20, decimal_places=2, null=True, blank=True
+    )
+    total_value = models.DecimalField(
+        max_digits=20, decimal_places=2, null=True, blank=True
+    )
 
     def save(self, *args, **kwargs):
         if self.unit_value is None:
-            self.unit_value = self.material.unit_value
+            self.unit_value = self.service.unit_value
+
+        self.total_value = self.unit_value * self.quantity
         super().save(*args, **kwargs)
 
 
