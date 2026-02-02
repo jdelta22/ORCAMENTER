@@ -92,7 +92,8 @@ class Orcament(models.Model):
     def calculate_total(self):
         material_total = sum(item.total_value for item in self.material_items.all())
         service_total = sum(item.total_value for item in self.service_items.all())
-        return material_total + service_total
+        self.total_value = material_total + service_total
+        self.save(update_fields=["total_value"])
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -118,7 +119,7 @@ class OrcamentMaterial(models.Model):
         return self.quantity * self.unit_value
 
     def save(self, *args, **kwargs):
-        if not self.unit_value:
+        if self.unit_value is None:
             self.unit_value = self.material.unit_value
         super().save(*args, **kwargs)
 
@@ -140,8 +141,8 @@ class OrcamentService(models.Model):
         return self.quantity * self.unit_value
 
     def save(self, *args, **kwargs):
-        if not self.unit_value:
-            self.unit_value = self.service.unit_value
+        if self.unit_value is None:
+            self.unit_value = self.material.unit_value
         super().save(*args, **kwargs)
 
 

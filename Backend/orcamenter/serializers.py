@@ -132,7 +132,7 @@ class OrcamentReadSerializer(serializers.ModelSerializer):
 
 class OrcamentMaterialWriteSerializer(serializers.Serializer):
     material = serializers.PrimaryKeyRelatedField(queryset=Material.objects.all())
-    quantity = serializers.DecimalField(max_digits=10, decimal_places=2)
+    quantity = serializers.IntegerField()
     unit_value = serializers.DecimalField(max_digits=10, decimal_places=2)
 
 
