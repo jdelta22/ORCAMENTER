@@ -45,6 +45,15 @@ function Materials() {
       <div className="dashboard-header">
         <h1>Meus Materials</h1>
         <button onClick={handleNew}>Novo material</button>
+        <MaterialModal
+          isOpen={showModal}
+          material={selectedMaterial}
+          onClose={() => {
+            setShowModal(false);
+            setSelectedMaterial(null);
+          }}
+          onSaved={handleSaved}
+        />
       </div>
 
       <div className="card-container">
@@ -72,16 +81,6 @@ function Materials() {
           </div>
         ))}
       </div>
-
-      <MaterialModal
-        isOpen={showModal}
-        material={selectedMaterial}
-        onClose={() => {
-          setShowModal(false);
-          setSelectedMaterial(null);
-        }}
-        onSaved={handleSaved}
-      />
     </div>
   );
 }

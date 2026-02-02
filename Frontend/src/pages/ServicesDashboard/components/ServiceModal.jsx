@@ -50,10 +50,10 @@ function ServiceModal({ isOpen, onClose, onSaved, service }) {
   return (
     <div className="modal-overlay">
       <div className="modal">
-        <h2>{service ? "Editar Service" : "Novo Service"}</h2>
+        <h2>{service ? "Editar Serviço" : "Novo Serviço"}</h2>
 
         <input
-          placeholder="Service"
+          placeholder="Serviço"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />

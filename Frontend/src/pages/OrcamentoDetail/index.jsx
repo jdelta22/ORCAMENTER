@@ -8,6 +8,7 @@ function OrcamentoDetail() {
   const [orcamento, setOrcamento] = useState(null);
   const navigate = useNavigate();
   const { id } = useParams();
+  const API_URL = "http://localhost:8000";
 
   useEffect(() => {
     if (!id) return;
@@ -19,6 +20,23 @@ function OrcamentoDetail() {
   }, [id]);
 
   if (!orcamento) return <p>Carregando...</p>;
+
+  async function gerarPDF(id) {
+    api
+      .get(`/orcament/${id}/pdf/`, {
+        responseType: "blob", // MUITO IMPORTANTE
+      })
+      .then((res) => {
+        const file = new Blob([res.data], { type: "application/pdf" });
+        const fileURL = URL.createObjectURL(file);
+
+        window.open(fileURL);
+      })
+      .catch((err) => {
+        console.error("Erro ao gerar PDF", err);
+        alert("Erro ao gerar PDF");
+      });
+  }
 
   return (
     <div className="dashboard">
@@ -93,6 +111,13 @@ function OrcamentoDetail() {
       <div className="total-card">
         Total do orçamento: <strong>R$ {orcamento.total_value}</strong>
       </div>
+      <button
+        type="button"
+        onClick={() => gerarPDF(orcamento.id)}
+        className="pdf-button"
+      >
+        Gerar PDF
+      </button>
     </div>
   );
 }

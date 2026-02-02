@@ -21,7 +21,9 @@ def create_user_plan(sender, instance, created, **kwargs):
     if not created:
         return
 
-    free_plan = Plan.objects.get(code=Plan.FREE)
+    free_plan = Plan.objects.filter(code=Plan.FREE).first()
+    if not free_plan:
+        return
 
     UserPlan.objects.create(
         user=instance,

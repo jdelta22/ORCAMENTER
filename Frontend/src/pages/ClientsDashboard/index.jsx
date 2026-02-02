@@ -43,6 +43,15 @@ function Clients() {
       <div className="dashboard-header">
         <h1>Meus Clientes</h1>
         <button onClick={handleNew}>Novo cliente</button>
+        <ClientModal
+          isOpen={showModal}
+          client={selectedClient}
+          onClose={() => {
+            setShowModal(false);
+            setSelectedClient(null);
+          }}
+          onSaved={handleSaved}
+        />
       </div>
 
       <div className="card-container">
@@ -71,16 +80,6 @@ function Clients() {
             </div>
           </div>
         ))}
-
-        <ClientModal
-          isOpen={showModal}
-          client={selectedClient}
-          onClose={() => {
-            setShowModal(false);
-            setSelectedClient(null);
-          }}
-          onSaved={handleSaved}
-        />
       </div>
     </div>
   );

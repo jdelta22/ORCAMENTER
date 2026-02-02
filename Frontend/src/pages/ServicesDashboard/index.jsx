@@ -43,8 +43,17 @@ function Services() {
   return (
     <div className="dashboard">
       <div className="dashboard-header">
-        <h1>Meus Services</h1>
-        <button onClick={handleNew}>Novo servicee</button>
+        <h1>Meus Serviços</h1>
+        <button onClick={handleNew}>Novo serviço</button>
+        <ServiceModal
+          isOpen={showModal}
+          service={selectedService}
+          onClose={() => {
+            setShowModal(false);
+            setSelectedService(null);
+          }}
+          onSaved={handleSaved}
+        />
       </div>
 
       <div className="card-container">
@@ -72,16 +81,6 @@ function Services() {
           </div>
         ))}
       </div>
-
-      <ServiceModal
-        isOpen={showModal}
-        service={selectedService}
-        onClose={() => {
-          setShowModal(false);
-          setSelectedService(null);
-        }}
-        onSaved={handleSaved}
-      />
     </div>
   );
 }
