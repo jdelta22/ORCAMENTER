@@ -109,7 +109,7 @@ class OrcamentMaterial(models.Model):
     orcament = models.ForeignKey(
         Orcament, on_delete=models.CASCADE, related_name="material_items"
     )
-    material = models.ForeignKey(Material, on_delete=models.PROTECT)
+    material = models.ForeignKey(Material, on_delete=models.CASCADE)
 
     quantity = models.PositiveIntegerField(default=1)
     unit_value = models.DecimalField(
@@ -131,7 +131,7 @@ class OrcamentService(models.Model):
     orcament = models.ForeignKey(
         "Orcament", on_delete=models.CASCADE, related_name="service_items"
     )
-    service = models.ForeignKey(Service, on_delete=models.PROTECT)
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)
 
     quantity = models.DecimalField(
         max_digits=10,
