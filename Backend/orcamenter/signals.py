@@ -9,7 +9,7 @@ from .models import OrcamentMaterial, OrcamentService, Plan, UserPlan
 @receiver([post_save, post_delete], sender=OrcamentService)
 def update_orcament_total(sender, instance, **kwargs):
     orcament = instance.orcament
-    total = orcament.calculate_total()
+    total = orcament.calculate_total() or 0
 
     if total != orcament.total_value:
         orcament.total_value = total
