@@ -133,13 +133,17 @@ class OrcamentReadSerializer(serializers.ModelSerializer):
 class OrcamentMaterialWriteSerializer(serializers.Serializer):
     material = serializers.PrimaryKeyRelatedField(queryset=Material.objects.all())
     quantity = serializers.IntegerField()
-    unit_value = serializers.DecimalField(max_digits=10, decimal_places=2)
+    unit_value = serializers.DecimalField(
+        max_digits=10, decimal_places=2, required=False, allow_null=True
+    )
 
 
 class OrcamentServiceWriteSerializer(serializers.Serializer):
     service = serializers.PrimaryKeyRelatedField(queryset=Service.objects.all())
-    quantity = serializers.DecimalField(max_digits=10, decimal_places=2)
-    unit_value = serializers.DecimalField(max_digits=10, decimal_places=2)
+    quantity = serializers.IntegerField()
+    unit_value = serializers.DecimalField(
+        max_digits=10, decimal_places=2, required=False, allow_null=True
+    )
 
 
 class OrcamentWriteSerializer(serializers.ModelSerializer):
@@ -167,18 +171,18 @@ class OrcamentWriteSerializer(serializers.ModelSerializer):
 
         orcament = Orcament.objects.create(**validated_data)
 
-        for material in materials:
-            OrcamentMaterial.objects.create(orcament=orcament, **material)
+        for item in materials:
+            OrcamentMaterial.objects.create(orcament=orcament, **item)
 
-        for service in services:
-            OrcamentService.objects.create(orcament=orcament, **service)
+        for item in services:
+            OrcamentService.objects.create(orcament=orcament, **item)
 
         orcament.calculate_total()
         return orcament
 
     def update(self, instance, validated_data):
-        materials = validated_data.pop("materials", None)
-        services = validated_data.pop("services", None)
+        materials = validated_data.pop("material_items", None)
+        services = validated_data.pop("service_items", None)
 
         instance = super().update(instance, validated_data)
 
