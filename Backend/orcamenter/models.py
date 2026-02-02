@@ -97,8 +97,8 @@ class Orcament(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            base_slug = slugify(self.title)
-            self.slug = f"{base_slug}-{uuid.uuid4().hex[:8]}"
+            base = slugify(self.title) or "orcamento"
+            self.slug = f"{base}-{uuid.uuid4().hex[:8]}"
         super().save(*args, **kwargs)
 
     def __str__(self):
