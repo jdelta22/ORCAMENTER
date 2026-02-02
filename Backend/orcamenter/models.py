@@ -143,7 +143,7 @@ class OrcamentService(models.Model):
         max_digits=20, decimal_places=2, null=True, blank=True
     )
     total_value = models.DecimalField(
-        max_digits=20, decimal_places=2, null=True, blank=True
+        max_digits=20, decimal_places=2, null=False, blank=True, default=0
     )
 
     def save(self, *args, **kwargs):
