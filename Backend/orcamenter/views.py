@@ -1,10 +1,15 @@
 from django.contrib.auth.models import User
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+from django.template.loader import render_to_string
 from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
+from weasyprint import HTML
 
 from .models import Orcament
 from .serializers import *
@@ -143,3 +148,19 @@ class OrcamentServiceViewSet(ModelViewSet):
 
         serializer.save()
         orcament.calculate_total()
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def orcament_pdf(request, orcament_id):
+    orcament = get_object_or_404(Orcament, id=orcament_id, owner=request.user)
+
+    html_string = render_to_string(
+        "orcamentos/orcamento_pdf.html", {"orcament": orcament}
+    )
+
+    pdf = HTML(string=html_string).write_pdf()
+
+    response = HttpResponse(pdf, content_type="application/pdf")
+    response["Content-Disposition"] = f'inline; filename="orcamento_{orcament.id}.pdf"'
+    return response

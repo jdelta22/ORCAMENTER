@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      color: #333;
+    }
+
+    h1, h2, h3 {
+      margin-bottom: 5px;
+    }
+
+    .header {
+      border-bottom: 2px solid #000;
+      margin-bottom: 15px;
+    }
+
+    .section {
+      margin-bottom: 15px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 5px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .total {
+      text-align: right;
+      font-size: 14px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CABEÇALHO -->
+  <div class="header">
+    <h1>Orçamento</h1>
+    <p><strong>Data:</strong> {{ orcament.created_at|date:"d/m/Y" }}</p>
+    <p><strong>Título:</strong> {{ orcament.title }}</p>
+  </div>
+
+  <!-- DESCRIÇÃO -->
+  {% if orcament.description %}
+  <div class="section">
+    <h3>Descrição</h3>
+    <p>{{ orcament.description }}</p>
+  </div>
+  {% endif %}
+
+  <!-- CLIENTE -->
+  <div class="section">
+    <h3>Cliente</h3>
+    <p><strong>Nome:</strong> {{ orcament.client.name }}</p>
+    <p><strong>Documento:</strong> {{ orcament.client.document_number }}</p>
+    <p><strong>Tipo:</strong> {{ orcament.client.document_type }}</p>
+    <p><strong>Email:</strong> {{ orcament.client.email }}</p>
+  </div>
+
+  <!-- MATERIAIS -->
+  {% if orcament.material_items.all %}
+<div class="section">
+  <h3>Materiais</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Descrição</th>
+        <th>Qtd</th>
+        <th>Valor Unit.</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in orcament.material_items.all %}
+      <tr>
+        <td>{{ item.material.description }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>R$ {{ item.unit_value }}</td>
+        <td>R$ {{ item.total_value }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
+  <!-- SERVIÇOS -->
+ {% if orcament.service_items.all %}
+<div class="section">
+  <h3>Serviços</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Descrição</th>
+        <th>Qtd</th>
+        <th>Valor Unit.</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in orcament.service_items.all %}
+      <tr>
+        <td>{{ item.service.description }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>R$ {{ item.unit_value }}</td>
+        <td>R$ {{ item.total_value }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
+  <!-- TOTAL -->
+  <div class="section total">
+    Total do orçamento: R$ {{ orcament.total_value }}
+  </div>
+
+</body>
+</html>

@@ -13,6 +13,7 @@ from .views import (
     OrcamentViewSet,
     RegisterUserView,
     ServiceViewSet,
+    orcament_pdf,
 )
 
 app_name = "orcamenter"
@@ -40,4 +41,5 @@ urlpatterns = [
     path("api/", include(router.urls)),
     path("api/login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/login/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("api/orcament/<int:orcament_id>/pdf/", orcament_pdf, name="orcament_pdf"),
 ]
