@@ -43,7 +43,7 @@ urlpatterns = [
     path("api/", include(router.urls)),
     path("api/login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/login/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
-    path("api/orcament/<int:orcament_id>/pdf/", orcament_pdf, name="orcament_pdf"),
+    path("api/orcaments/<int:orcament_id>/pdf/", orcament_pdf, name="orcament_pdf"),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='orcamenter:schema'), name='swagger-ui'),
     path('api/redoc/', SpectacularRedocView.as_view(url_name='orcamenter:schema'), name='redoc'),
