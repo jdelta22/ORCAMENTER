@@ -1,6 +1,5 @@
 import uuid
 
-from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -152,70 +151,3 @@ class OrcamentService(models.Model):
 
         self.total_value = self.unit_value * self.quantity
         super().save(*args, **kwargs)
-
-
-class Plan(models.Model):
-    FREE = "free"
-    PREMIUM = "premium"
-
-    PLAN_CHOICES = (
-        (FREE, "Grátis"),
-        (PREMIUM, "Premium"),
-    )
-
-    code = models.CharField(
-        max_length=20,
-        choices=PLAN_CHOICES,
-        unique=True,
-        default=FREE,
-    )
-
-    name = models.CharField(max_length=50)
-
-    max_orcaments = models.PositiveIntegerField()
-    can_emit_invoice = models.BooleanField(default=False)
-
-    price = models.DecimalField(
-        max_digits=8,
-        decimal_places=2,
-        default=0,
-    )
-
-    def __str__(self):
-        return self.name
-
-
-class UserPlan(models.Model):
-    user = models.OneToOneField(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name="plan",
-    )
-    plan = models.ForeignKey(
-        Plan,
-        on_delete=models.PROTECT,
-    )
-    started_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.user} - {self.plan.name}"
-
-
-class Subscription(models.Model):
-    MONTHLY = "monthly"
-    YEARLY = "yearly"
-
-    CYCLE_CHOICES = (
-        (MONTHLY, "Mensal"),
-        (YEARLY, "Anual"),
-    )
-
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    plan = models.ForeignKey(Plan, on_delete=models.PROTECT)
-    cycle = models.CharField(max_length=10, choices=CYCLE_CHOICES)
-
-    price = models.DecimalField(max_digits=8, decimal_places=2)
-    active = models.BooleanField(default=True)
-
-    started_at = models.DateTimeField(auto_now_add=True)
-    expires_at = models.DateTimeField()

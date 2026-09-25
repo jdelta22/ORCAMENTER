@@ -10,7 +10,6 @@ from .models import (
     Orcament,
     OrcamentMaterial,
     OrcamentService,
-    Plan,
     Service,
 )
 
@@ -38,23 +37,33 @@ class ServiceSerializer(serializers.ModelSerializer):
 
 
 class ClientSerializer(serializers.ModelSerializer):
-    def validate_document_number(self, value):
-        document = value.replace(".", "").replace("-", "").replace("/", "")
+    def validate(self, attrs):
+        document = re.sub(r"\D", "", attrs["document_number"])
 
-        doc_type = self.initial_data.get("document_type")
-
-        if doc_type == Client.CPF:
+        if len(document) == 11:
             if not CPF().validate(document):
-                raise serializers.ValidationError("CPF inválido")
+                raise serializers.ValidationError({
+                    "document_number": "CPF inválido"
+                })
 
-        elif doc_type == Client.CNPJ:
+            attrs["document_type"] = Client.CPF
+
+        elif len(document) == 14:
             if not CNPJ().validate(document):
-                raise serializers.ValidationError("CNPJ inválido")
+                raise serializers.ValidationError({
+                    "document_number": "CNPJ inválido"
+                })
+
+            attrs["document_type"] = Client.CNPJ
 
         else:
-            raise serializers.ValidationError("Tipo de documento inválido")
+            raise serializers.ValidationError({
+                "document_number": "Documento deve conter 11 ou 14 dígitos."
+            })
 
-        return document  # SEM máscara
+        attrs["document_number"] = document
+
+        return attrs
 
     class Meta:
         model = Client
@@ -66,6 +75,7 @@ class ClientSerializer(serializers.ModelSerializer):
             "document_type",
             "document_number",
         )
+        read_only_fields = ("document_type",)
 
 
 class OrcamentMaterialSerializer(serializers.ModelSerializer):
@@ -232,17 +242,6 @@ class RegisterUserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("A senha deve conter ao menos um número")
 
         return value
-
-
-class PlanSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Plan
-        fields = (
-            "name",
-            "max_orcaments",
-            "can_emit_invoice",
-            "price",
-        )
 
 
 class OrcamentMaterialCreateSerializer(serializers.ModelSerializer):

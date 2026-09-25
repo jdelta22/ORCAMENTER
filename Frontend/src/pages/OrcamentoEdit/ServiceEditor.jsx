@@ -8,7 +8,7 @@ function ServicesEditor({ orcamentoId, onChange }) {
   const [quantity, setQuantity] = useState("");
   const [unitValue, setUnitValue] = useState("");
 
-  // catálogo de materiais
+  // catálogo de SERVIÇOS
   useEffect(() => {
     api.get("/services/").then((res) => setCatalog(res.data));
   }, []);

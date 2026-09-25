@@ -7,7 +7,6 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from weasyprint import HTML
 
@@ -29,21 +28,15 @@ class OrcamentViewSet(ModelViewSet):
         return Orcament.objects.filter(owner=self.request.user).order_by("created_at")
 
     def perform_create(self, serializer):
-        user = self.request.user
-        user_plan = user.plan.plan
-        total = Orcament.objects.filter(owner=user).count()
-
-        if total >= user_plan.max_orcaments:
-            raise PermissionDenied("Limite de orçamentos do seu plano atingido")
-
-        serializer.save(owner=user)
+        serializer.save(owner=self.request.user)
 
 
 class RegisterUserView(ModelViewSet):
+    authentication_classes = []
     permission_classes = [AllowAny]
     serializer_class = RegisterUserSerializer
     queryset = User.objects.all()
-    http_method_names = ["get", "post"]
+    http_method_names = ["post"]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -85,33 +78,6 @@ class ClientViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
-
-
-class InvoiceView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        if not request.user.plan.plan.can_emit_invoice:
-            raise PermissionDenied("Seu plano não permite emissão de nota fiscal")
-
-        # lógica da nota fiscal
-        return Response({"status": "NF emitida"})
-
-
-class MyPlanView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        user_plan = request.user.plan.plan
-        return Response(
-            {
-                "code": user_plan.code,
-                "name": user_plan.name,
-                "price": user_plan.price,
-                "max_orcaments": user_plan.max_orcaments,
-                "can_emit_invoice": user_plan.can_emit_invoice,
-            }
-        )
 
 
 class OrcamentMaterialViewSet(ModelViewSet):

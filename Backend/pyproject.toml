@@ -1,0 +1,19 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = "Orcamenter, sistemas para criar orçamentos"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "drf-spectacular>=0.30.0",
+    "pytest>=9.1.1",
+]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "backend.settings"
+testpaths = ["tests"]
+
+[dependency-groups]
+dev = [
+    "pytest-django>=4.14.0",
+]

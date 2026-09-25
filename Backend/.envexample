@@ -1,0 +1,8 @@
+# Django
+SECRET_KEY=change-me
+DEBUG=True
+DATABASE_URL=postgres://orcamenter:orcamenter@localhost:5432/orcamenter
+CORS_ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
+
+# Frontend (Vite) — base deve incluir /api
+# VITE_API_URL=http://localhost:8000/api

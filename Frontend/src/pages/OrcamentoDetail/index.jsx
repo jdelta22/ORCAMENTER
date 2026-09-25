@@ -8,7 +8,6 @@ function OrcamentoDetail() {
   const [orcamento, setOrcamento] = useState(null);
   const navigate = useNavigate();
   const { id } = useParams();
-  const API_URL = "http://localhost:8000";
 
   useEffect(() => {
     if (!id) return;
