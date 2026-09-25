@@ -160,8 +160,10 @@ SIMPLE_JWT = {
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Minha API',
-    'DESCRIPTION': 'Documentação automática da API',
+    'TITLE': 'Orçamenter',
+    'DESCRIPTION': 'API para criação de orçamentos',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
+    'SWAGGER_UI_SETTINGS': {'persistAuthorization': True},
+    'COMPONENT_SPLIT_REQUEST': True,  # separa schemas de request/response quando diferem
 }

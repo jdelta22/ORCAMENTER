@@ -8,6 +8,7 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
 from weasyprint import HTML
 
 from .models import Orcament
@@ -15,6 +16,11 @@ from .serializers import *
 
 
 # Create your views here.
+@extend_schema(
+    summary="Orçamentos",
+    description="Orçamentos com titulo, descrição, cliente, materiais e serviços realizados",
+    tags=['Orçamentos'],
+)
 class OrcamentViewSet(ModelViewSet):
     serializer_class = OrcamentReadSerializer
     permission_classes = [IsAuthenticated]
@@ -46,7 +52,11 @@ class RegisterUserView(ModelViewSet):
             {"message": "User registered successfully."}, status=status.HTTP_201_CREATED
         )
 
-
+@extend_schema(
+    summary="Materiais",
+    description="Materiais a serem utilizados nos orçamentos",
+    tags=['Materiais'],
+)
 class MaterialViewSet(ModelViewSet):
     serializer_class = MaterialSerializer
     permission_classes = [IsAuthenticated]
@@ -57,7 +67,11 @@ class MaterialViewSet(ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
-
+@extend_schema(
+    summary="Serviços",
+    description="Serviços a serem oferecidos nos orçamentos",
+    tags=['Serviços'],
+)
 class ServiceViewSet(ModelViewSet):
     serializer_class = ServiceSerializer
     permission_classes = [IsAuthenticated]
@@ -68,7 +82,11 @@ class ServiceViewSet(ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
-
+@extend_schema(
+    summary="Clientes",
+    description="Clientes disponiveis para receber orçamento",
+    tags=['Clientes'],
+)
 class ClientViewSet(ModelViewSet):
     serializer_class = ClientSerializer
     permission_classes = [IsAuthenticated]
@@ -79,7 +97,11 @@ class ClientViewSet(ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
-
+@extend_schema(
+    summary="Orçament-Material",
+    description="Endpoint auxiliar para alterar os materiais relacionados a algum orçamento",
+    tags=['Orçament-Material'],
+)
 class OrcamentMaterialViewSet(ModelViewSet):
     serializer_class = OrcamentMaterialCreateSerializer
     permission_classes = [IsAuthenticated]
@@ -97,7 +119,11 @@ class OrcamentMaterialViewSet(ModelViewSet):
         serializer.save()
         orcament.calculate_total()
 
-
+@extend_schema(
+    summary="Orçament-Service",
+    description="Endpoint auxiliar para alterar os serviços relacionados a algum orçamento",
+    tags=['Orçament-Service'],
+)
 class OrcamentServiceViewSet(ModelViewSet):
     serializer_class = OrcamentServiceCreateSerializer
     permission_classes = [IsAuthenticated]
@@ -115,7 +141,11 @@ class OrcamentServiceViewSet(ModelViewSet):
         serializer.save()
         orcament.calculate_total()
 
-
+@extend_schema(
+    summary="Orçamentos",
+    description="Retorna PDF do orçamento selecionado",
+    tags=['Orçamentos'],
+)
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def orcament_pdf(request, orcament_id):
